@@ -1,4 +1,186 @@
-# Comandos Básicos de Docker
+# 📚 Clase 1: Introducción a Docker y Contenedores
+
+## 🔹 Estructura de la Clase
+
+### 🔸 1. Teoría
+
+#### ✅ 1.1 Introducción a Docker y Contenedores
+**Concepto Clave:** Docker permite empaquetar aplicaciones y sus dependencias en contenedores portables y ligeros.
+
+**Problema que resuelve Docker:**
+- "Funciona en mi máquina, pero no en la tuya."
+- Inconsistencias entre entornos de desarrollo, prueba y producción.
+- Instalaciones pesadas con múltiples dependencias.
+
+**¿Qué es un contenedor?**
+- Es una unidad de software empaquetada con código y dependencias.
+- Se ejecuta de forma aislada del sistema operativo anfitrión.
+- Se puede desplegar en cualquier lugar sin cambios (local, servidores, nube).
+
+**Comparación rápida: Contenedores vs Máquinas Virtuales (VMs)**
+| Característica | Contenedores | Máquinas Virtuales |
+|--------------|-------------|-----------------|
+| Tiempo de inicio | Segundos | Minutos |
+| Tamaño | Megabytes | Gigabytes |
+| Uso del sistema | Comparte kernel | Requiere un SO completo |
+| Portabilidad | Alta | Media |
+
+#### ✅ 1.2 Componentes de Docker
+
+**Docker Engine:**
+- Se compone del Daemon (gestiona contenedores) y la CLI (herramienta de línea de comandos).
+- Se ejecuta en segundo plano en Linux/macOS/Windows.
+
+**Docker CLI:**
+- Herramienta para interactuar con contenedores (`docker run`, `docker ps`, etc.).
+
+**Docker Hub:**
+- Registro público donde se almacenan imágenes listas para usar.
+- Ejemplo: `docker pull nginx` obtiene la imagen de Nginx desde Docker Hub.
+
+**Imagen vs Contenedor:**
+- **Imagen:** Plantilla inmutable con el código de la aplicación.
+- **Contenedor:** Instancia en ejecución de una imagen.
+
+Ejemplo:
+- Una imagen de Node.js es como un archivo `.iso` de Ubuntu.
+- Un contenedor basado en esa imagen es como un sistema Ubuntu en ejecución.
+
+#### ✅ 1.3 Comandos básicos de Docker
+
+**Gestión de Contenedores:**
+```sh
+docker run nginx          # Ejecutar un contenedor con la imagen de Nginx
+docker ps                 # Ver contenedores en ejecución
+docker stop <ID/NOMBRE>   # Detener un contenedor
+docker rm <ID/NOMBRE>     # Eliminar un contenedor
+```
+
+**Gestión de Imágenes:**
+```sh
+docker images             # Ver imágenes locales
+docker pull redis         # Descargar una imagen de Redis
+docker rmi <IMAGEN>       # Eliminar una imagen
+```
+
+**Ejecución Interactiva:**
+```sh
+docker run -it ubuntu bash   # Acceder a un contenedor de Ubuntu en modo interactivo
+```
+
+## 🔹 2. Práctica en KillerCoda
+
+### 🛠️ Lab 1: Primer Contenedor con Docker
+**Objetivo:** Ejecutar un contenedor simple y verificar su estado.
+
+**Ejecutar un contenedor de Nginx:**
+```sh
+docker run -d --name mi-nginx -p 8080:80 nginx
+```
+
+**Verificar su estado:**
+```sh
+docker ps
+```
+
+**Acceder desde un navegador:**
+```
+http://localhost:8080
+```
+
+**Detener y eliminar el contenedor:**
+```sh
+docker stop mi-nginx
+docker rm mi-nginx
+```
+
+### 🛠️ Lab 2: Explorando Contenedores en Ejecución
+**Objetivo:** Ejecutar un contenedor interactivo y entender su aislamiento.
+
+**Iniciar un contenedor de Ubuntu en modo interactivo:**
+```sh
+docker run -it ubuntu bash
+```
+
+**Probar comandos dentro del contenedor:**
+```sh
+ls /
+echo "Hola desde un contenedor" > /home/mensaje.txt
+cat /home/mensaje.txt
+exit
+```
+
+**Inspeccionar el contenedor después de salir:**
+```sh
+docker ps -a
+```
+
+### 🛠️ Lab 3: Descargando y Gestionando Imágenes
+**Objetivo:** Manejar imágenes de Docker en el sistema.
+
+**Listar imágenes locales:**
+```sh
+docker images
+```
+
+**Descargar manualmente una imagen de Redis:**
+```sh
+docker pull redis
+```
+
+**Inspeccionar la información de la imagen:**
+```sh
+docker inspect redis
+```
+
+### 🛠️ Lab 4: Creando y Ejecutando Contenedores en Segundo Plano
+**Objetivo:** Ejecutar servicios en segundo plano.
+
+**Ejecutar un contenedor de PostgreSQL:**
+```sh
+docker run -d --name mi-postgres -e POSTGRES_PASSWORD=admin -p 5432:5432 postgres
+```
+
+**Verificar su ejecución:**
+```sh
+docker ps
+```
+
+**Detener y eliminar el contenedor:**
+```sh
+docker stop mi-postgres
+docker rm mi-postgres
+```
+
+## 🔹 3. Cierre y Tareas
+
+### 📌 Resumen de la clase:
+- Diferencias entre contenedores y máquinas virtuales.
+- Uso de Docker CLI para ejecutar y administrar contenedores.
+- Descarga y gestión de imágenes desde Docker Hub.
+- Ejecución de contenedores en modo interactivo y en segundo plano.
+
+### 📌 Tareas para la próxima clase:
+
+1. **Ejecutar un contenedor con MySQL**
+   - Descargar la imagen de MySQL (`docker pull mysql`).
+   - Ejecutar un contenedor en modo interactivo con `-e MYSQL_ROOT_PASSWORD=admin`.
+   - Verificar que el contenedor está corriendo (`docker ps`).
+   - Detener y eliminar el contenedor.
+
+2. **Explorar imágenes en Docker Hub**
+   - Buscar imágenes de lenguajes de programación (ejemplo: `python`, `node`).
+   - Descargar una imagen y ejecutar un contenedor en modo interactivo.
+   - Probar ejecutar un simple script de Python dentro del contenedor.
+
+🎯 **Resultado Esperado:**
+- Los participantes entienden qué es Docker y para qué se usa.
+- Ejecutan y gestionan contenedores básicos con Docker.
+- Descargan y exploran imágenes de Docker Hub.
+- Manejan comandos básicos de inspección y eliminación de contenedores.
+
+
+# Extensión: Comandos Básicos de Docker
 
 ## 📌 1. Gestión de Imágenes
 
