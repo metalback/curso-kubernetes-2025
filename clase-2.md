@@ -157,19 +157,21 @@ docker build -t mi-app-optimizada .
 **Dockerfile Multi-Stage:**
 ```dockerfile
 # Etapa de construcción
+# Etapa de construcción
 FROM node:18 AS build
 WORKDIR /app
-COPY package.json .
+COPY package.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN npm run build || echo "No build step"
 
-# Etapa final
+# Etapa final (producción)
 FROM node:18-alpine
 WORKDIR /app
 COPY --from=build /app/package.json .
+COPY --from=build /app/ .
 RUN npm install --only=production
-COPY --from=build /app/dist /app
+COPY --from=build /app /app
 EXPOSE 3000
 CMD ["node", "index.js"]
 ```
