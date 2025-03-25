@@ -34,7 +34,7 @@ docker run -d -p 3000:3000 mi-app
 docker run -d -p 3000:3000 -v $(pwd):/app mi-app
 ```
 
-✔**Ventaja:**Cualquier cambio en el código local se refleja en el contenedor sin reiniciarlo.
+✔ **Ventaja:** Cualquier cambio en el código local se refleja en el contenedor sin reiniciarlo.
 
 **Definiendo volúmenes en `docker-compose.yml`**
 ```yaml
@@ -91,9 +91,9 @@ docker inspect <nombre_contenedor> | grep "OOM"  # Revisar si se quedó sin memo
 
 ## 🔹 2. Práctica en KillerCoda
 
-###**Lab 1: Desarrollo con Hot-Reloading
+### Lab 1: Desarrollo con Hot-Reloading
 
-**Objetivo:**Configurar un entorno de desarrollo donde los cambios en el código se reflejen sin reiniciar el contenedor.
+**Objetivo:** Configurar un entorno de desarrollo donde los cambios en el código se reflejen sin reiniciar el contenedor.
 
 **Abrir el entorno en KillerCoda - Docker Debugging**
 [https://killercoda.com/playgrounds/scenario/docker-debugging](https://killercoda.com/playgrounds/scenario/docker-debugging)
@@ -168,9 +168,9 @@ Modificar `main.py` y ver cambios en vivo sin reiniciar el contenedor.
 
 ---
 
-###**Lab 2: Debugging de Contenedores
+### Lab 2: Debugging de Contenedores
 
-**Objetivo:**Usar comandos de depuración para inspeccionar y solucionar errores en contenedores.
+**Objetivo:** Usar comandos de depuración para inspeccionar y solucionar errores en contenedores.
 
 **Estructura del proyecto:**
 ```javascript
@@ -302,7 +302,7 @@ docker inspect mi-app | grep "Env"
 
 ---
 
-###**Lab 3: Análisis de Problemas con Redes de Docker
+### Lab 3: Análisis de Problemas con Redes de Docker
 
 **Objetivo:**Diagnosticar problemas de conexión entre servicios en una red Docker.
 
@@ -495,13 +495,13 @@ healthcheck:
 
 ## 🔹 3. Cierre y Tareas
 
-### **Resumen de la clase:**
-✔ Uso de volúmenes para compartir archivos entre el contenedor y el sistema local.
-✔ Aplicación de hot-reloading en entornos de desarrollo.
-✔ Depuración de contenedores con `docker logs`, `docker exec` y `docker inspect`.
-✔ Diagnóstico de problemas en redes de Docker.
+### Resumen de la clase:**
+* ✔ Uso de volúmenes para compartir archivos entre el contenedor y el sistema local.
+* ✔ Aplicación de hot-reloading en entornos de desarrollo.
+* ✔ Depuración de contenedores con `docker logs`, `docker exec` y `docker inspect`.
+* ✔ Diagnóstico de problemas en redes de Docker.
 
-### **Tareas para la próxima clase:**
+### Tareas para la próxima clase:**
 - Crear un `docker-compose.yml` con MySQL y una aplicación Python.
 - Explorar `healthcheck` en Docker Compose.
 
