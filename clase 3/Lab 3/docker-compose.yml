@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  service_a:
+    build:
+      context: ./service_a
+      dockerfile: ../Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      SERVICE_B_HOST: service_b
+      SERVICE_B_PORT: 8001
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: appdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    depends_on:
+      - service_b
+      - db
+    networks:
+      - app_net
+
+  service_b:
+    build:
+      context: ./service_b
+      dockerfile: ../Dockerfile
+    ports:
+      - "8001:8001"
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+volumes:
+  pgdata:
+
+networks:
+  app_net:
+    driver: bridge
