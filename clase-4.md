@@ -176,6 +176,11 @@ volumes:
   pgadmin-data:
 ```
 
+**Detener y reiniciar el servicio de la base de datos:**
+```sh
+docker-compose restart db
+```
+
 **Verificar que los datos persisten tras reiniciar el contenedor.**
 
 ### **Lab 3: Backend en FastAPI y PostgreSQL**
@@ -281,11 +286,28 @@ docker-compose up -d
 │   ├── database.py
 │   ├── models.py
 │   └── crud.py
+├── .dockerignore
 ├── .env
+├── .gitignore
 ├── requirements.txt
 ├── Dockerfile
 └── docker-compose.yml
 
+```
+
+**.dockerignore:**
+```txt
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+*.db
+.DS_Store
+.vscode/
+.idea/
+*.log
 ```
 
 **.env:**
@@ -302,39 +324,70 @@ DB_PASS=clave
 fastapi
 uvicorn[standard]
 sqlalchemy
-pymssql
+pyodbc
 ```
 
 **models.py:**
 ```python
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import (
+    Column, BigInteger, String, Boolean, Integer, DateTime, Date
+)
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Cliente(Base):
-    __tablename__ = "clientes"
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(50), nullable=False)
-    email = Column(String(100), unique=True, index=True)
+class Persona(Base):
+    __tablename__ = "persona_natural"
+    __table_args__ = {"schema": "bdi"}
+
+    rut = Column(BigInteger, primary_key=True, index=True)
+    digito_verificador = Column(String(1), nullable=False)
+    nombre = Column(String(8000), nullable=False)
+    apellido_paterno = Column(String(8000), nullable=False)
+    apellido_materno = Column(String(8000), nullable=False)
+    chileno = Column(Boolean)
+    fecha_nacimiento = Column(DateTime)
+    sexo = Column(String(1))
+    id_pueblo_originario = Column(Integer)
+    email = Column(String(8000))
+    id_pais = Column(Integer)
+    id_regimen_conyugal = Column(Integer)
+    id_estado_civil = Column(Integer)
+    id_nivel_educacional = Column(Integer)
+    id_usuario = Column(Integer)
+    inicio_actividad = Column(Boolean)
+    rut_conyuge = Column(BigInteger)
+    id_regimen_conyugal_caracteristica = Column(Integer)
+    fecha_defuncion = Column(Date)
+    id_pueblo_originario_pertenencia = Column(Integer)
+    fecha_actualizacion_registro_civil = Column(DateTime)
+    fecha_actualizacion_mideso = Column(DateTime)
+    calificacion_socioeconomica = Column(Integer)
+    serie = Column(Integer)
+    fecha_matrimonio = Column(Date)
+    imagen_path = Column(String(100))
 ```
 
 **database.py:**
 ```python
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models import Base
 
-# Reemplaza los datos con los de tu instancia SQL Server
-DB_HOST = "sqlserver_host"
-DB_PORT = "1433"
-DB_NAME = "mi_basedatos"
-DB_USER = "usuario"
-DB_PASS = "clave"
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT", "1433")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
 
-DATABASE_URL = f"mssql+pymssql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# ODBC Driver 18 requiere 'encrypt=yes' por defecto
+DATABASE_URL = (
+    f"mssql+pyodbc://{DB_USER}:{DB_PASS}@{DB_HOST},{DB_PORT}/{DB_NAME}"
+    "?driver=ODBC+Driver+18+for+SQL+Server&encrypt=yes&TrustServerCertificate=yes"
+)
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
@@ -350,12 +403,10 @@ from app import crud
 
 app = FastAPI()
 
-# Inicializa la base de datos al arrancar
 @app.on_event("startup")
 def startup():
     init_db()
 
-# Dependencia de sesión
 def get_db():
     db = SessionLocal()
     try:
@@ -363,27 +414,48 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/clientes")
-def crear(nombre: str, email: str, db: Session = Depends(get_db)):
-    return crud.crear_cliente(db, nombre, email)
+@app.post("/personas/{rut}")
+def listar(rut: int, db: Session = Depends(get_db)):
+    return crud.obtener_persona_por_rut(db, rut)
 
-@app.get("/clientes")
+@app.get("/personas")
 def listar(db: Session = Depends(get_db)):
-    return crud.obtener_clientes(db)
+    return crud.obtener_personas(db)
 ```
 
 **Dockerfile:**
 ```Dockerfile
-FROM python:3.10
+FROM python:3.12 
 
-WORKDIR /app
+WORKDIR /code 
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+ARG BASE_PATH=.
+
+COPY $BASE_PATH/openssl.cnf /etc/ssl/openssl.cnf
+
+# Instalar Poetry
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
+    cd /usr/local/bin && \
+    ln -s /opt/poetry/bin/poetry && \
+    poetry config virtualenvs.create false
+
+RUN sh -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -" \
+    && apt-get update \
+    && sh -c "curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list" \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
+    && ACCEPT_EULA=Y apt-get install -y mssql-tools18
+RUN apt-get install unixodbc
+
+COPY $BASE_PATH/pyproject.toml $BASE_PATH/poetry.lock* /code/
+
+ENV PYTHONPATH=/code
+
+COPY $BASE_PATH/app /code/app
+
+RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --only main ; fi"
 
 COPY app ./app
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```
 
 **docker-compose.yml:**
@@ -397,13 +469,15 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./app:/code/app
 ```
 
 Para ejecutar
 Asegúrate de que el SQL Server externo esté accesible desde tu máquina.
 
-Modifica database.py con los datos reales.
+Modifica .env con los datos reales.
 
 Ejecuta:
 
@@ -425,14 +499,6 @@ Accede a la API en Swagger: http://localhost:8000/docs
 ```sh
 docker-compose logs -f backend
 ```
-
-**Detener y reiniciar el servicio de la base de datos:**
-```sh
-docker-compose restart db
-```
-
-**Confirmar que el backend se vuelve a conectar automáticamente.**
-
 ---
 
 ## 🔹 3. Cierre y Tareas
