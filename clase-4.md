@@ -95,11 +95,94 @@ docker-compose up --build
 
 ### **Lab 1: Creación de un Docker Compose básico**
 
-**Objetivo:** Definir y ejecutar una aplicación con un backend en FastAPI conectado a una base de datos PostgreSQL.
+**Objetivo:** Definir y ejecutar una aplicación pgadmin conectado a una base de datos PostgreSQL.
 
 Abrir el entorno en [KillerCoda - Docker Compose](https://killercoda.com/playgrounds/scenario/docker-compose)
 
 **Crear un archivo `docker-compose.yml` con el siguiente contenido:**
+```yaml
+version: "3.8"
+
+services:
+  db:
+    container_name: db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mi_basedatos
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lab.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+```
+
+**Levantar los servicios:**
+```sh
+docker-compose up -d
+```
+
+**Verificar que los contenedores están en ejecución:**
+```sh
+docker-compose ps
+```
+
+**Detener los servicios:**
+```sh
+docker-compose down
+```
+
+### **Lab 2: Volúmenes persistentes**
+
+**Objetivo:** Asegurar que PostgreSQL almacene los datos de forma persistente y que pgadmin pueda conectarse a la base de datos.
+
+**Crear un archivo `docker-compose.yml` con el siguiente contenido:**
+```yaml
+version: "3.8"
+
+services:
+  db:
+    container_name: db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mi_basedatos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lab.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  postgres-data:
+  pgadmin-data:
+```
+
+**Verificar que los datos persisten tras reiniciar el contenedor.**
+
+### **Lab 3: Backend en FastAPI y PostgreSQL**
+
+**Objetivo:** Crear un API que pueda conectarse a la base de datos postgres sin problema.
+
+**Estructura del proyecto:**
 ```css
 ├── app
 │   ├── main.py
@@ -129,67 +212,10 @@ fastapi
 uvicorn[standard]
 asyncpg
 sqlalchemy
+psycopg2-binary
 ```
 
-**main.py**
-```python
-from fastapi import FastAPI
-import os
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "¡FastAPI funcionando con Docker Compose!"}
-```
-
-**Crear un archivo `docker-compose.yml` con el siguiente contenido:**
-```yaml
-version: "3.8"
-
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: test_db
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-
-volumes:
-  postgres-data:
-```
-
-**Levantar los servicios:**
-```sh
-docker-compose up -d
-```
-
-**Verificar que los contenedores están en ejecución:**
-```sh
-docker-compose ps
-```
-
-**Detener los servicios:**
-```sh
-docker-compose down
-```
-
-### **Lab 2: Volúmenes persistentes y conexión real a PostgreSQL**
-
-**Objetivo:** Asegurar que PostgreSQL almacene los datos de forma persistente y que FastAPI pueda conectarse realmente a la base de datos.
-
-**Extensión de main.py para conectar a PostgreSQL:**
+**main.py para conectar a PostgreSQL:**
 ```python
 from fastapi import FastAPI
 from sqlalchemy import create_engine, text
@@ -200,15 +226,18 @@ app = FastAPI()
 DATABASE_URL = "postgresql+psycopg2://postgres:admin@db:5432/test_db"
 engine = create_engine(DATABASE_URL)
 
+@app.get("/")
+def read_root():
+    return {"message": "¡FastAPI funcionando con Docker Compose!"}
+
 @app.get("/db-check")
 def db_check():
     with engine.connect() as conn:
         result = conn.execute(text("SELECT 1"))
         return {"db_status": result.scalar()}
-
 ```
 
-**Modificar `docker-compose.yml` para agregar volúmenes:**
+**`docker-compose.yml`:**
 ```yaml
 version: "3.8"
 
@@ -220,7 +249,7 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: test_db
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data-lab3:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -232,48 +261,12 @@ services:
       - db
 
 volumes:
-  postgres-data:
+  postgres-data-lab3:
 ```
 
 **Ejecutar:**
 ```sh
 docker-compose up -d
-```
-
-**Verificar que los datos persisten tras reiniciar el contenedor.**
-
-### **Lab 3: Creación de una Red Personalizada**
-
-**Objetivo:** Conectar servicios a través de una red Docker personalizada.
-
-**Agregar una red personalizada a `docker-compose.yml`:**
-```yaml
-networks:
-  red-app:
-  
-services:
-  db:
-    ...
-    networks:
-      - red-app
-
-  backend:
-    ...
-    networks:
-      - red-app
-
-networks:
-  red-app:
-```
-
-**Ejecutar:**
-```sh
-docker-compose up -d
-```
-
-**Comprobar que los servicios están en la misma red:**
-```sh
-docker network inspect mi-red
 ```
 
 ### **Lab 4: CRUD con FastAPI + SQLAlchemy conectado a SQL Server externo**
