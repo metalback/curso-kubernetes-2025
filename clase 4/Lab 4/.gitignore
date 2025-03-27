@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtualenv / Poetry
+.env
+.env.*
+.venv/
+venv/
+poetry.lock
+
+# Pytest / Coverage / Logs
+.cache/
+.coverage
+coverage.xml
+htmlcov/
+*.log
+
+# Docker
+*.tar
+*.pid
+*.bak
+docker-compose.override.yml
+
+# IDEs / editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Mac / Linux / Windows basura
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# MyPy / Pylint / Ruff
+.mypy_cache/
+.pyre/
+.pytype/
+ruff
