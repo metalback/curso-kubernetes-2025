@@ -16,7 +16,15 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/personas/{rut}")
+@app.get("/")
+def read_root():
+    return {"message": "¡FastAPI funcionando con Docker Compose!"}
+
+@app.get("/2")
+def read_root():
+    return {"message": "¡FastAPI 2!"}
+
+@app.get("/personas/{rut}")
 def listar(rut: int, db: Session = Depends(get_db)):
     return crud.obtener_persona_por_rut(db, rut)
 
