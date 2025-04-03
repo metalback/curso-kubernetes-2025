@@ -1,5 +1,5 @@
 # 📚 Clase 6: Interacción con Kubernetes y Deployments
-
+ 
 **Objetivo:** Aprender a administrar aplicaciones en Kubernetes utilizando **Deployments**, escalar Pods y gestionar el ciclo de vida de las aplicaciones con `kubectl`.
 
 ---
@@ -70,6 +70,22 @@ kubectl rollout history deployment mi-app  # Ver historial
 kubectl rollout undo deployment mi-app     # Hacer rollback
 ```
 
+### ✅ 1.4 Escalado Automático con HPA (HorizontalPodAutoscaler)
+
+**Concepto:** Kubernetes permite escalar de forma automática según el uso de CPU u otros métricos.
+
+**Requisitos:** Tener el `metrics-server` instalado (por ejemplo, en Minikube se habilita con `minikube addons enable metrics-server`).
+
+**Comando para crear un HPA:**
+```sh
+kubectl autoscale deployment mi-app --cpu-percent=50 --min=1 --max=5
+```
+
+**Ver estado del HPA:**
+```sh
+kubectl get hpa
+```
+
 ---
 
 ## 🔹 2. Práctica en KillerCoda
@@ -122,6 +138,23 @@ kubectl get deployments
 kubectl delete deployment mi-app
 ```
 
+### ✅ Lab 5: Crear un HPA
+
+1. Crear un Deployment con `resources.requests.cpu` definido:
+```yaml
+resources:
+  requests:
+    cpu: "100m"
+```
+2. Crear el autoscaler:
+```sh
+kubectl autoscale deployment mi-app --cpu-percent=50 --min=1 --max=5
+```
+3. Verificar:
+```sh
+kubectl get hpa
+```
+
 ---
 
 ## 🔹 3. Cierre y Tareas
@@ -130,12 +163,15 @@ kubectl delete deployment mi-app
 
 - Uso de Deployments para gestionar el ciclo de vida de aplicaciones.
 - Escalado, actualización y rollback con `kubectl`.
+- Uso básico de HorizontalPodAutoscaler.
 
 ### 📅 Tareas:
 
 1. Crear un Deployment para una app Flask en `python:3.9`.
 2. Explorar el uso de `kubectl rollout pause` y `resume` para actualizaciones controladas.
+3. Crear un HPA que escale una app de 1 a 3 Pods según CPU > 60%.
 
 ---
 
-**🔜 Resultado esperado:** Participantes capaces de desplegar, escalar, actualizar y mantener aplicaciones usando Deployments de Kubernetes.
+**🔜 Resultado esperado:** Participantes capaces de desplegar, escalar, actualizar y mantener aplicaciones usando Deployments de Kubernetes, incluyendo el escalado automático con HPA.
+
