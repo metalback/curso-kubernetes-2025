@@ -10,17 +10,17 @@
 Kubernetes es una plataforma de orquestación de contenedores que automatiza la implementación, escalado y operación de aplicaciones.
 
 **¿Por qué usar Kubernetes?**
-✔ Automatiza la administración de contenedores.
-✔ Escala aplicaciones de forma eficiente.
-✔ Facilita la gestión del ciclo de vida de los contenedores.
-✔ Proporciona alta disponibilidad y recuperación automática.
+- ✔ Automatiza la administración de contenedores.
+- ✔ Escala aplicaciones de forma eficiente.
+- ✔ Facilita la gestión del ciclo de vida de los contenedores.
+- ✔ Proporciona alta disponibilidad y recuperación automática.
 
 **Componentes Principales:**
-✔ **Clúster**: Grupo de máquinas donde se ejecutan las aplicaciones.
-✔ **Nodo**: Máquina dentro del clúster (puede ser física o virtual).
-✔ **Pod**: La unidad más pequeña en Kubernetes, contiene uno o más contenedores.
-✔ **Service**: Permite que los Pods se comuniquen entre sí o con el exterior.
-✔ **Deployment**: Administra la actualización y replicación de Pods.
+- ✔ **Clúster**: Grupo de máquinas donde se ejecutan las aplicaciones.
+- ✔ **Nodo**: Máquina dentro del clúster (puede ser física o virtual).
+- ✔ **Pod**: La unidad más pequeña en Kubernetes, contiene uno o más contenedores.
+- ✔ **Service**: Permite que los Pods se comuniquen entre sí o con el exterior.
+- ✔ **Deployment**: Administra la actualización y replicación de Pods.
 
 #### ✅ 1.2 Arquitectura de Kubernetes
 
@@ -28,15 +28,15 @@ Kubernetes es una plataforma de orquestación de contenedores que automatiza la 
 Kubernetes sigue un modelo **Master-Worker**, donde el **Control Plane** gestiona los nodos de trabajo.
 
 **Control Plane (Nodo Maestro):**
-✔ **API Server**: Punto central de comunicación con Kubernetes.
-✔ **Scheduler**: Asigna Pods a los nodos disponibles.
-✔ **Controller Manager**: Gestiona la creación y eliminación de objetos.
-✔ **etcd**: Base de datos distribuida que almacena el estado del clúster.
+- ✔ **API Server**: Punto central de comunicación con Kubernetes.
+- ✔ **Scheduler**: Asigna Pods a los nodos disponibles.
+- ✔ **Controller Manager**: Gestiona la creación y eliminación de objetos.
+- ✔ **etcd**: Base de datos distribuida que almacena el estado del clúster.
 
 **Nodos de Trabajo (Workers):**
-✔ **Kubelet**: Agente que corre en cada nodo, reportando su estado.
-✔ **Kube Proxy**: Maneja la comunicación de red entre los Pods y los Servicios.
-✔ **Container Runtime**: Ejecuta los contenedores (Docker, containerd).
+- ✔ **Kubelet**: Agente que corre en cada nodo, reportando su estado.
+- ✔ **Kube Proxy**: Maneja la comunicación de red entre los Pods y los Servicios.
+- ✔ **Container Runtime**: Ejecuta los contenedores (Docker, containerd).
 
 #### ✅ 1.3 Primeros Pasos con kubectl
 
@@ -60,9 +60,9 @@ kubectl delete pod <nombre>  # Eliminar un pod
 Los **manifiestos YAML** en Kubernetes permiten definir recursos de manera declarativa.
 
 **¿Por qué usar YAML en lugar de `kubectl run`?**
-✔ Permiten versionar y reutilizar configuraciones.
-✔ Son más portables y fáciles de administrar.
-✔ Permiten definir múltiples recursos en un solo archivo.
+- ✔ Permiten versionar y reutilizar configuraciones.
+- ✔ Son más portables y fáciles de administrar.
+- ✔ Permiten definir múltiples recursos en un solo archivo.
 
 **Ejemplo de un Manifiesto YAML para un Pod:**
 ```yaml
