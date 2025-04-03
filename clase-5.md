@@ -184,13 +184,13 @@ kubectl delete pod mi-pod-error  # Eliminar el Pod
 
 ## 🔹 3. Cierre y Tareas
 
-### **Resumen de la clase:****
+### **Resumen de la clase:**
 - ✔ Arquitectura de Kubernetes y sus componentes clave.
 - ✔ Uso de `kubectl` para interactuar con el clúster.
 - ✔ Creación y eliminación de Pods en Kubernetes.
 - ✔ Depuración básica de errores en Pods.
 
-### **Tareas para la próxima clase:****
+### **Tareas para la próxima clase:**
 - **Crear un Pod que ejecute un contenedor de Python**
   - Usar la imagen `python:3.9-slim`.
   - Especificar el comando `python -m http.server 8000`.
