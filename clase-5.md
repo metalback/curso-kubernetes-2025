@@ -108,7 +108,7 @@ spec:
 
 ## 🔹 2. Práctica en KillerCoda
 
-### **Lab 1: Exploración del Clúster Kubernetes
+### **Lab 1: Exploración del Clúster Kubernetes**
 
 **Objetivo:** Identificar los componentes clave de Kubernetes.
 
@@ -120,7 +120,7 @@ kubectl get nodes  # Ver nodos disponibles
 kubectl describe node <nombre-nodo>  # Inspeccionar un nodo
 ```
 
-### **Lab 2: Creación y Gestión de Pods
+### **Lab 2: Creación y Gestión de Pods**
 
 **Objetivo:** Ejecutar y administrar un Pod en Kubernetes.
 
@@ -132,7 +132,7 @@ kubectl exec -it mi-pod -- /bin/sh  # Acceder al contenedor en el Pod
 kubectl delete pod mi-pod  # Eliminar el Pod
 ```
 
-### **Lab 3: Creación de un Pod con un Archivo YAML
+### **Lab 3: Creación de un Pod con un Archivo YAML**
 
 **Objetivo:** Crear un Pod de manera declarativa con un archivo YAML.
 
@@ -156,7 +156,7 @@ kubectl get pods  # Verificar la creación del Pod
 kubectl delete -f mi-pod.yaml  # Eliminar el Pod
 ```
 
-### **Lab 4: Exploración de Logs y Debugging
+### **Lab 4: Exploración de Logs y Debugging**
 
 **Objetivo:** Usar logs y comandos de depuración en Kubernetes.
 
@@ -184,13 +184,13 @@ kubectl delete pod mi-pod-error  # Eliminar el Pod
 
 ## 🔹 3. Cierre y Tareas
 
-### **Resumen de la clase:**
-✔ Arquitectura de Kubernetes y sus componentes clave.
-✔ Uso de `kubectl` para interactuar con el clúster.
-✔ Creación y eliminación de Pods en Kubernetes.
-✔ Depuración básica de errores en Pods.
+### **Resumen de la clase:****
+- ✔ Arquitectura de Kubernetes y sus componentes clave.
+- ✔ Uso de `kubectl` para interactuar con el clúster.
+- ✔ Creación y eliminación de Pods en Kubernetes.
+- ✔ Depuración básica de errores en Pods.
 
-### **Tareas para la próxima clase:**
+### **Tareas para la próxima clase:****
 - **Crear un Pod que ejecute un contenedor de Python**
   - Usar la imagen `python:3.9-slim`.
   - Especificar el comando `python -m http.server 8000`.
@@ -200,7 +200,7 @@ kubectl delete pod mi-pod-error  # Eliminar el Pod
   - ¿Cómo filtrar Pods por etiquetas (`labels`)?
 
 🎯 **Resultado Esperado:**
-✔ Entender la arquitectura de Kubernetes.
-✔ Interactuar con el clúster usando `kubectl`.
-✔ Crear, administrar y eliminar Pods.
-✔ Usar logs y comandos de depuración para solucionar errores en Pods.
+- ✔ Entender la arquitectura de Kubernetes.
+- ✔ Interactuar con el clúster usando `kubectl`.
+- ✔ Crear, administrar y eliminar Pods.
+- ✔ Usar logs y comandos de depuración para solucionar errores en Pods.

@@ -1,6 +1,5 @@
 # 📚 Clase 6: Interacción con Kubernetes y Deployments
 
-**Duración total:** 2 horas  
 **Objetivo:** Aprender a administrar aplicaciones en Kubernetes utilizando **Deployments**, escalar Pods y gestionar el ciclo de vida de las aplicaciones con `kubectl`.
 
 ---
