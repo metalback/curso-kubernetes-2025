@@ -1,0 +1,30 @@
+# Lab 1: ConfigMap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mi-configmap
+data:
+  APP_ENV: "produccion"
+  LOG_LEVEL: "debug"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-configmap
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["sleep", "3600"]
+      env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: mi-configmap
+              key: APP_ENV
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: mi-configmap
+              key: LOG_LEVEL

@@ -1,0 +1,41 @@
+# Lab 3: PV + PVC + Pod
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mi-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mi-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-pvc
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - mountPath: "/data"
+          name: mi-volumen
+  volumes:
+    - name: mi-volumen
+      persistentVolumeClaim:
+        claimName: mi-pvc

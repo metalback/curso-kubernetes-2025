@@ -1,0 +1,25 @@
+# Lab 2: Secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mi-secret
+type: Opaque
+data:
+  PASSWORD: c2VjcmV0MTIz
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-secret
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["sleep", "3600"]
+      env:
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mi-secret
+              key: PASSWORD
