@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-con-cuenta
+spec:
+  serviceAccountName: mi-cuenta
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["sleep", "3600"]
